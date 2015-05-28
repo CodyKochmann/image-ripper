@@ -96,9 +96,17 @@ return new Za.prototype.init(a,b,c,d,e)}m.Tween=Za,Za.prototype={constructor:Za,
       return workspace;
     };
     window.find_all_images = function(s) {
-      var r;
+      var out, r, t, tmp;
+      out = [];
       r = /https?:[\w\.\/?=-]+\.(webm|tiff|jpeg|jpg|png)/g;
-      return s.match(r);
+      tmp = s.match(r);
+      while (tmp.length > 0) {
+        t = tmp.pop();
+        if (out.indexOf(t) === -1) {
+          out.push(t);
+        }
+      }
+      return out;
     };
     all_images = find_all_images(document.body.outerHTML + document.head.outerHTML);
     window.loaded_queue = [];

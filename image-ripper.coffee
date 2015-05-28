@@ -81,8 +81,14 @@ $ ->
     workspace
 
   window.find_all_images = (s) ->
+    out = []
     r = /https?:[\w\./?=-]+\.(webm|tiff|jpeg|jpg|png)/g
-    s.match(r)
+    tmp = s.match(r)
+    while(tmp.length>0)
+      t=tmp.pop()
+      if out.indexOf(t)==-1
+        out.push(t)
+    out
 
   all_images = find_all_images(document.body.outerHTML+document.head.outerHTML)
 
