@@ -69,33 +69,11 @@ $ ->
       workspace=workspace.split(tmp).join(new_s)
     workspace
 
-  window.all_links = (special_requirement=[],requirements_optional=true) ->
-    all_text = document.head.innerHTML + document.body.innerHTML
-    all_text = all_text.replaceAll(['\n',' ','"','<','>','url=',';'],"'").split("'")
-    result = []
-    while(all_text.length>0)
-      try
-        t=all_text.pop()
-        if t.contains(["://","http"])
-          if special_requirement!=[] or special_requirement != ""
-            missing=0
-            for i in special_requirement
-              if requirements_optional
-                if t.contains(i)
-                  if result.indexOf(t) == -1
-                    result.push t
-              else
-                if t.contains(i)==false
-                  missing+=1
-            if missing == 0
-              result.push t
-          else
-            if result.indexOf(t)==-1
-              result.push t
-      catch e
-        i=0
-    result=remove_duplicates(result)
-    result
+  window.find_all_images = (s) ->
+    r = /https?:[\w\./?=-]+\.(webm|tiff|jpeg|jpg|png)/g
+    s.match(r)
+
+  all_images = find_all_images(document.body.outerHTML+document.head.outerHTML)
 
   window.loaded_queue = []
   window.loaded_height = 0
@@ -107,13 +85,10 @@ $ ->
       tmp.style.width=($(window).width()*0.98).toString()+"px"
       tmp.style.top=(loaded_height+vertical_padding).toString()+"px"
       loaded_height+=parseInt(tmp.getBoundingClientRect().height)+vertical_padding
+      `$("body").height(loaded_height.toString()+"px")`
       true
 
   setInterval empty_queue, 100
-
-  window.image_loaded = () ->
-    loaded_queue.push(this)
-    true
 
   window.image_failed = () ->
     this.style.height="0"
@@ -121,8 +96,6 @@ $ ->
     true  
   
   `
-  //adding header metatag
-  $("head").append(b64.d("PG1ldGEgbmFtZT0idmlld3BvcnQiIGNvbnRlbnQ9IndpZHRoPWRldmljZS13aWR0aDsgaW5pdGlhbC1zY2FsZT0xOyBtYXhpbXVtLXNjYWxlPTE7IG1pbmltdW0tc2NhbGU9MSIgLz4="));
   document.body.innerHTML="";
   $("body").css({
     "height":"auto !important",
@@ -133,14 +106,9 @@ $ ->
     })`
 
   window.gen_image = (url) ->
-    is_image=false
-    for i in [".jpg",".gif",".tiff",".png",".webm"]
-      if i in url
-        is_image=true
-    if is_image
-      image_string = """<img src='#{url}' style="height:0;width:0;position:absolute;width:0;margin:1%;top:0px;left:0px;" onload="image_loaded" onerror="image_failed" />"""
-      console.log image_string
-      `$("body").append(image_string)`
+    image_string = """<img src='#{url}' style="height:0;width:0;position:absolute;width:0;margin:1%;top:0px;left:0px;" onload="loaded_queue.push(this)" onerror="image_failed" />"""
+    console.log image_string
+    `$("body").append(image_string)`
     true
 
   window.show_links = (link_array=[]) ->
@@ -149,4 +117,4 @@ $ ->
       gen_image(link_array.pop())
     true
 
-  show_links(all_links())
+  show_links(all_images)
