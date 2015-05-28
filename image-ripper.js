@@ -98,7 +98,7 @@ return new Za.prototype.init(a,b,c,d,e)}m.Tween=Za,Za.prototype={constructor:Za,
     window.find_all_images = function(s) {
       var out, r, t, tmp;
       out = [];
-      r = /https?:[\w\.\/?=-]+\.(webm|tiff|jpeg|jpg|png)/g;
+      r = /https?:[\w\.\/?=-]+\.(webm|tiff|jpeg|gif|jpg|png)/g;
       tmp = s.match(r);
       while (tmp.length > 0) {
         t = tmp.pop();
