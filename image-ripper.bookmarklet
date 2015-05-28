@@ -1,0 +1,1 @@
+javascript:{var inject_script=function(b){var a;a=document.createElement("script");a.src=b;document.body.appendChild(a);console.log("loading: "+b)};inject_script("https://raw.githubusercontent.com/CodyKochmann/image-ripper/master/image-ripper.js");}
