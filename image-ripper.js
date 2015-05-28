@@ -150,7 +150,7 @@ return new Za.prototype.init(a,b,c,d,e)}m.Tween=Za,Za.prototype={constructor:Za,
       if (link_array == null) {
         link_array = [];
       }
-      NightMode();
+      //NightMode();
       while (link_array.length > 0) {
         gen_image(link_array.pop());
       }
