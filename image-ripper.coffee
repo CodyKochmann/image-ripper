@@ -82,7 +82,7 @@ $ ->
 
   window.find_all_images = (s) ->
     out = []
-    r = /https?:[\w\./?=-]+\.(webm|tiff|jpeg|jpg|png)/g
+    r = /https?:[\w\./?=-]+\.(webm|tiff|jpeg|jpg|gif|png)/g
     tmp = s.match(r)
     while(tmp.length>0)
       t=tmp.pop()
