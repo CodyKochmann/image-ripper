@@ -1,6 +1,6 @@
 #   ==========================================================================
 #
-#   image-ripper v1.0 (13) by: Cody Kochmann - kochmanncody@gmail.com
+#   image-ripper v1.0 (14) by: Cody Kochmann - kochmanncody@gmail.com
 #
 #   image-ripper is designed to be a refreshless image viewer for sites with
 #   unfriendly UI's such as forums (no offense to forums, now that google plus 
@@ -90,7 +90,7 @@ return!0}function Q(a,b,d,e){if(m.acceptData(a)){var f,g,h=m.expando,i=a.nodeTyp
 
   window.find_all_images = (s) ->
     out = []
-    r = /https?:[\w\./?=-]+\.(webm|tiff|jpeg|jpg|gif|png)/g
+    r = /https?:[\w:\%\./?=-]+\.(webm|tiff|jpeg|jpg|gif|png)/g
     tmp = s.match(r)
     while(tmp.length>0)
       t=tmp.pop()

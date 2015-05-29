@@ -96,7 +96,7 @@ return!0}function Q(a,b,d,e){if(m.acceptData(a)){var f,g,h=m.expando,i=a.nodeTyp
     window.find_all_images = function(s) {
       var out, r, t, tmp;
       out = [];
-      r = /https?:[\w\.\/?=-]+\.(webm|tiff|jpeg|jpg|gif|png)/g;
+      r = /https?:[\w:\%\.\/?=-]+\.(webm|tiff|jpeg|jpg|gif|png)/g;
       tmp = s.match(r);
       while (tmp.length > 0) {
         t = tmp.pop();
