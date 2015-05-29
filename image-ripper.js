@@ -94,20 +94,16 @@ return!0}function Q(a,b,d,e){if(m.acceptData(a)){var f,g,h=m.expando,i=a.nodeTyp
       return workspace;
     };
     window.find_all_images = function(s) {
-      var good, i, j, len, out, r, t, tmp;
+      var out, r, t, tmp;
       out = [];
-      r = /(https?:)?[\w:\%\.\/?=-]+\.(webm|tiff|jpeg|jpg|gif|png)/g;
+      r = /https?:[\w:\%\.\/?=-]+\.(webm|tiff|jpeg|jpg|gif|png)/g;
       tmp = s.match(r);
       while (tmp.length > 0) {
         t = tmp.pop();
-        good = true;
-        for (j = 0, len = out.length; j < len; j++) {
-          i = out[j];
-          if (t.contains(i) || i.contains(t)) {
-            good = false;
-          }
+        if (t.contains("=http")) {
+          t = "http" + t.split("=http")[1];
         }
-        if (good) {
+        if (tmp.indexOf(t) === -1) {
           out.push(t);
         }
       }
@@ -118,28 +114,22 @@ return!0}function Q(a,b,d,e){if(m.acceptData(a)){var f,g,h=m.expando,i=a.nodeTyp
     window.loaded_height = 0;
     window.vertical_padding = parseInt(screen.width * 0.01);
     window.empty_queue = function() {
-      var tmp;
+      var t;
       if (loaded_queue.length > 0) {
-        tmp = loaded_queue.pop();
-        tmp.style.height = "auto";
-        tmp.style.width = ($(window).width() * 0.98).toString() + "px";
-        tmp.style.top = (loaded_height + vertical_padding).toString() + "px";
-        loaded_height += parseInt(tmp.getBoundingClientRect().height) + vertical_padding;
-        $("body").height(loaded_height.toString() + "px");
+        t = loaded_queue.pop();
+        t.style.display = "block";
         return true;
       }
     };
     setInterval(empty_queue, 100);
     window.image_failed = function() {
-      this.style.height = "0";
-      this.style.width = "0";
       return true;
     };
     window.gen_image = function(url) {
       var image_string;
-      image_string = "<img src='" + url + "' style=\"height:0;width:0;position:absolute;width:0;margin:1%;top:0px;left:0px;\" onload=\"loaded_queue.push(this)\" onerror=\"image_failed\" />";
+      image_string = "<img src='" + url + "' style=\"height:auto;position:relative;float:left;width:98%;margin:1%;top:0px;left:0px;display:none;\" onload=\"loaded_queue.push(this)\" onerror=\"image_failed\" />";
       console.log(image_string);
-      document.body.innerHTML += image_string;
+      $("body").append(image_string);
       return true;
     };
     window.show_links = function(link_array) {
