@@ -94,13 +94,20 @@ return!0}function Q(a,b,d,e){if(m.acceptData(a)){var f,g,h=m.expando,i=a.nodeTyp
       return workspace;
     };
     window.find_all_images = function(s) {
-      var out, r, t, tmp;
+      var good, i, j, len, out, r, t, tmp;
       out = [];
-      r = /https?:[\w:\%\.\/?=-]+\.(webm|tiff|jpeg|jpg|gif|png)/g;
+      r = /(https?:)?[\w:\%\.\/?=-]+\.(webm|tiff|jpeg|jpg|gif|png)/g;
       tmp = s.match(r);
       while (tmp.length > 0) {
         t = tmp.pop();
-        if (out.indexOf(t) === -1) {
+        good = true;
+        for (j = 0, len = out.length; j < len; j++) {
+          i = out[j];
+          if (t.contains(i) || i.contains(t)) {
+            good = false;
+          }
+        }
+        if (good) {
           out.push(t);
         }
       }
