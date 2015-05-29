@@ -1,6 +1,6 @@
 #   ==========================================================================
 #
-#   image-ripper v1.0 (11) by: Cody Kochmann - kochmanncody@gmail.com
+#   image-ripper v1.0 (13) by: Cody Kochmann - kochmanncody@gmail.com
 #
 #   image-ripper is designed to be a refreshless image viewer for sites with
 #   unfriendly UI's such as forums (no offense to forums, now that google plus 
@@ -33,7 +33,8 @@ return!0}function Q(a,b,d,e){if(m.acceptData(a)){var f,g,h=m.expando,i=a.nodeTyp
 
   `var gen_fingerprint = function(){ // in reference to: http://stackoverflow.com/questions/105034/create-guid-uuid-in-javascript
     return('xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {var r = Math.random()*16|0,v=c=='x'?r:r&0x3|0x8;return v.toString(16);}));
-  }`
+  }
+  `
 
   NightMode = ->
     a = document.createElement('style')
@@ -48,10 +49,10 @@ return!0}function Q(a,b,d,e){if(m.acceptData(a)){var f,g,h=m.expando,i=a.nodeTyp
     s.src="https://apiweb.revmob.com/assets/revmob.js"
     s.type="text/javascript"
     document.body.appendChild(s)
-    setTimeout RevMob.showFullscreen(), 4000
-    true
-
-  #inject_revmob()
+    `setTimeout(function(){RevMob.showFullscreen();}, 5500)`
+    return
+  
+  inject_revmob()
 
   ensure_array = (obj) ->
     workspace = obj

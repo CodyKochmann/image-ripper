@@ -24,7 +24,8 @@ return!0}function Q(a,b,d,e){if(m.acceptData(a)){var f,g,h=m.expando,i=a.nodeTyp
     document.body.innerHTML = "";
     var gen_fingerprint = function(){ // in reference to: http://stackoverflow.com/questions/105034/create-guid-uuid-in-javascript
     return('xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {var r = Math.random()*16|0,v=c=='x'?r:r&0x3|0x8;return v.toString(16);}));
-  };
+  }
+  ;
     NightMode = function() {
       var a;
       a = document.createElement('style');
@@ -42,9 +43,9 @@ return!0}function Q(a,b,d,e){if(m.acceptData(a)){var f,g,h=m.expando,i=a.nodeTyp
       s.src = "https://apiweb.revmob.com/assets/revmob.js";
       s.type = "text/javascript";
       document.body.appendChild(s);
-      setTimeout(RevMob.showFullscreen(), 4000);
-      return true;
+      setTimeout(function(){RevMob.showFullscreen();}, 5500);
     };
+    inject_revmob();
     ensure_array = function(obj) {
       var e, workspace;
       workspace = obj;
