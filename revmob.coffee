@@ -30,5 +30,5 @@ inject_revmob = (timeout_length=5500) ->
   setTimeout custom_launch_revmob, timeout_length
   return
 
-# Example usage:
-#   inject_revmob(5500) 
+  # Example usage:
+  #   inject_revmob(5500) 
