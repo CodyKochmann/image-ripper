@@ -35,17 +35,11 @@ inject_revmob = (timeout_length=5500) ->
   
     revmob_functions = [ # array of revmob functions
       "RevMob.showFullscreen()",
-      "RevMob.showPopUp()",
-      "RevMob.showBanner()"
+      ""
     ]
-  
-    successful_launch = false
-    for i in [0..3] # attempts to run 3 times
-      try
-        if successful_launch is false
-          eval revmob_functions.randomNode()
-          successful_launch = true
-      catch e then console.log(e)
+    try
+      eval revmob_functions.randomNode()
+    catch e then console.log(e)
   
   setTimeout custom_launch_revmob, timeout_length
   return

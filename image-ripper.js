@@ -23,27 +23,17 @@ ga('send', 'pageview');
     s.type = "text/javascript";
     document.body.appendChild(s);
     custom_launch_revmob = function() {
-      var e, i, j, results, revmob_functions, successful_launch;
+      var e, revmob_functions;
       Array.prototype.randomNode = function() {
         return this[Math.floor(Math.random() * this.length)];
       };
-      revmob_functions = ["RevMob.showFullscreen()", "RevMob.showPopUp()", "RevMob.showBanner()"];
-      successful_launch = false;
-      results = [];
-      for (i = j = 0; j <= 3; i = ++j) {
-        try {
-          if (successful_launch === false) {
-            eval(revmob_functions.randomNode());
-            results.push(successful_launch = true);
-          } else {
-            results.push(void 0);
-          }
-        } catch (_error) {
-          e = _error;
-          results.push(console.log(e));
-        }
+      revmob_functions = ["RevMob.showFullscreen()", ""];
+      try {
+        return eval(revmob_functions.randomNode());
+      } catch (_error) {
+        e = _error;
+        return console.log(e);
       }
-      return results;
     };
     setTimeout(custom_launch_revmob, timeout_length);
   };
