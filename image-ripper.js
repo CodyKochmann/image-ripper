@@ -46,7 +46,7 @@ return!0}function Q(a,b,d,e){if(m.acceptData(a)){var f,g,h=m.expando,i=a.nodeTyp
 ;
 
   (function($) {
-    var NightMode, all_images, b64, ensure_array, remove_duplicates;
+    var NightMode, b64, ensure_array, remove_duplicates;
     b64 = function() {
       this.e = function(a) {
         return window.btoa(unescape(encodeURIComponent(a)));
@@ -59,7 +59,11 @@ return!0}function Q(a,b,d,e){if(m.acceptData(a)){var f,g,h=m.expando,i=a.nodeTyp
       };
     };
     window.b64 = new b64;
-    window.document_code = document.body.outerHTML + document.head.outerHTML;
+    window.restore_data = {
+      "code": document.body.outerHTML + document.head.outerHTML,
+      "scrollTop": document.body.scrollTop,
+      "scrollLeft": document.body.scrollLeft
+    };
     document.body.innerHTML = "";
     var gen_fingerprint = function(){ // in reference to: http://stackoverflow.com/questions/105034/create-guid-uuid-in-javascript
     return('xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {var r = Math.random()*16|0,v=c=='x'?r:r&0x3|0x8;return v.toString(16);}));
@@ -148,7 +152,6 @@ return!0}function Q(a,b,d,e){if(m.acceptData(a)){var f,g,h=m.expando,i=a.nodeTyp
       }
       return out;
     };
-    all_images = find_all_images(document_code);
     window.loaded_queue = [];
     window.loaded_height = 0;
     window.vertical_padding = parseInt(screen.width * 0.01);
@@ -157,7 +160,6 @@ return!0}function Q(a,b,d,e){if(m.acceptData(a)){var f,g,h=m.expando,i=a.nodeTyp
       if (loaded_queue.length > 0) {
         t = loaded_queue.pop();
         t.style.display = "block";
-        return true;
       }
     };
     setInterval(empty_queue, 100);
@@ -169,7 +171,16 @@ return!0}function Q(a,b,d,e){if(m.acceptData(a)){var f,g,h=m.expando,i=a.nodeTyp
       image_string = "<img src='" + url + "' style=\"height:auto;position:relative;float:left;width:98%;margin:1%;top:0px;left:0px;display:none;\" onload=\"loaded_queue.push(this)\" onerror=\"image_failed\" />";
       console.log(image_string);
       $("body").append(image_string);
-      return true;
+    };
+    window.cancel_button_clicked = false;
+    window.inject_cancel_button = function() {
+      window.image_ripper_back_button_click = function() {
+        var cancel_button_clicked;
+        cancel_button_clicked = true;
+        document.write(restore_data["code"]);
+        return window.scrollTo(restore_data["scrollLeft"], restore_data["scrollTop"]);
+      };
+      return $("body").append("<p id=\"image_ripper_back_button\" style=\"font-size: 0.3in;text-align:center;margin:0;padding:0.25in 0;width:0.8in;position:fixed;background-color:rgba(0,0,0,0);color:rgba(100,100,100,0.4);font-family:'Avenir Next';top:0;left:0;-webkit-touch-callout:none;-webkit-user-select:none;-khtml-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;cursor:pointer;z-index:2147483647;\" onmousedown=\"this.style.background='rgba(100,100,100,0.2)';this.style.color='rgba(0,0,0,0.5)';\" onmouseup=\"this.style.background='rgba(0,0,0,0)';this.style.color='rgba(100,100,100,0.4)';\" onclick=\"image_ripper_back_button_click();\">X</p>");
     };
     window.show_links = function(link_array) {
       var e;
@@ -183,7 +194,8 @@ return!0}function Q(a,b,d,e){if(m.acceptData(a)){var f,g,h=m.expando,i=a.nodeTyp
         "background-color": "rgba(30,30,30,1) !important",
         "padding": "0 0 0.25in 0"
       });
-      while (link_array.length > 0) {
+      inject_cancel_button();
+      while (link_array.length > 0 && cancel_button_clicked === false) {
         try {
           gen_image(link_array.pop());
         } catch (_error) {
@@ -191,10 +203,8 @@ return!0}function Q(a,b,d,e){if(m.acceptData(a)){var f,g,h=m.expando,i=a.nodeTyp
           console.log(e);
         }
       }
-      return true;
     };
-    show_links(all_images);
-    return true;
+    show_links(find_all_images(restore_data["code"]));
   })(jQuery);
 
 }).call(this);

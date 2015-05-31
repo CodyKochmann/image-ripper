@@ -67,7 +67,11 @@ return!0}function Q(a,b,d,e){if(m.acceptData(a)){var f,g,h=m.expando,i=a.nodeTyp
     return
   window.b64 = new b64
 
-  window.document_code=document.body.outerHTML+document.head.outerHTML
+  window.restore_data =
+    "code":document.body.outerHTML+document.head.outerHTML
+    "scrollTop":document.body.scrollTop
+    "scrollLeft":document.body.scrollLeft
+
   document.body.innerHTML=""
 
   `var gen_fingerprint = function(){ // in reference to: http://stackoverflow.com/questions/105034/create-guid-uuid-in-javascript
@@ -142,8 +146,6 @@ return!0}function Q(a,b,d,e){if(m.acceptData(a)){var f,g,h=m.expando,i=a.nodeTyp
         out.push(t)
     out
 
-  all_images = find_all_images(document_code)
-
   window.loaded_queue = []
   window.loaded_height = 0
   window.vertical_padding = parseInt(screen.width*0.01)
@@ -151,7 +153,7 @@ return!0}function Q(a,b,d,e){if(m.acceptData(a)){var f,g,h=m.expando,i=a.nodeTyp
     if loaded_queue.length>0
       t = loaded_queue.pop()
       t.style.display="block"
-      true
+      return
 
   setInterval empty_queue, 100
 
@@ -162,7 +164,15 @@ return!0}function Q(a,b,d,e){if(m.acceptData(a)){var f,g,h=m.expando,i=a.nodeTyp
     image_string = """<img src='#{url}' style="height:auto;position:relative;float:left;width:98%;margin:1%;top:0px;left:0px;display:none;" onload="loaded_queue.push(this)" onerror="image_failed" />"""
     console.log image_string
     $("body").append(image_string)
-    true
+    return
+
+  window.cancel_button_clicked=false
+  window.inject_cancel_button = () ->
+    window.image_ripper_back_button_click=()->
+       cancel_button_clicked=true
+       document.write restore_data["code"]
+       window.scrollTo(restore_data["scrollLeft"],restore_data["scrollTop"])
+    $("body").append("""<p id="image_ripper_back_button" style="font-size: 0.3in;text-align:center;margin:0;padding:0.25in 0;width:0.8in;position:fixed;background-color:rgba(0,0,0,0);color:rgba(100,100,100,0.4);font-family:'Avenir Next';top:0;left:0;-webkit-touch-callout:none;-webkit-user-select:none;-khtml-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;cursor:pointer;z-index:2147483647;" onmousedown="this.style.background='rgba(100,100,100,0.2)';this.style.color='rgba(0,0,0,0.5)';" onmouseup="this.style.background='rgba(0,0,0,0)';this.style.color='rgba(100,100,100,0.4)';" onclick="image_ripper_back_button_click();">X</p>""")
 
   window.show_links = (link_array=[]) ->
     $('body').css
@@ -171,13 +181,14 @@ return!0}function Q(a,b,d,e){if(m.acceptData(a)){var f,g,h=m.expando,i=a.nodeTyp
       "background":"rgba(30,30,30,1) !important"
       "background-color":"rgba(30,30,30,1) !important"
       "padding":"0 0 0.25in 0"
+    inject_cancel_button()
     #NightMode()
-    while link_array.length > 0
+    while link_array.length > 0 and cancel_button_clicked is false
       try
         gen_image(link_array.pop())
       catch e then console.log e
-    true
+    return
 
-  show_links(all_images)
-  true
+  show_links(find_all_images(restore_data["code"]))
+  return
 ) jQuery
