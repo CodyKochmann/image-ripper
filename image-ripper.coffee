@@ -146,6 +146,18 @@ return!0}function Q(a,b,d,e){if(m.acceptData(a)){var f,g,h=m.expando,i=a.nodeTyp
         out.push(t)
     out
 
+  window.find_all_links = (s) ->
+    out = []
+    r = /https?:[\w:\%\./?=-]+/g
+    tmp = s.match(r)
+    while(tmp.length>0)
+      t=tmp.pop()
+      if t.contains("=http")
+        t="http"+t.split("=http")[1]
+      if tmp.indexOf(t) == -1
+        out.push(t)
+    out
+
   window.loaded_queue = []
   window.loaded_height = 0
   window.vertical_padding = parseInt(screen.width*0.01)
@@ -190,5 +202,50 @@ return!0}function Q(a,b,d,e){if(m.acceptData(a)){var f,g,h=m.expando,i=a.nodeTyp
     return
 
   show_links(find_all_images(restore_data["code"]))
+
+  Array::remove_any_string_containing=(s)->
+    out=[]
+    for i in this
+      if i.indexOf(s)==-1
+        out.push i
+    out
+
+  Array::whitelist_rule=(s)->
+    out=[]
+    for i in this
+      if s in i
+        out.push i
+    out
+
+  get_second_level_html=(input_html)->
+    # issue: this script needs to be in the background for the user to continue on
+    grep = (theUrl) ->
+      xmlHttp = null
+      xmlHttp = new XMLHttpRequest
+      xmlHttp.open 'GET', theUrl, false
+      xmlHttp.send null
+      xmlHttp.responseText
+    output=[]
+    other_links=find_all_links(input_html)
+    load_next_link=()->
+      try
+        tmp_link=other_links.pop()
+        sample_data = find_all_images(grep(tmp_link))
+        sample_data=sample_data.remove_any_string_containing("thumb")
+        show_links sample_data
+        for i in sample_data
+          output.push(i)
+        console.log "Found #{sample_data.length} images in #{tmp_link}.\n#{other_links.length} remaining."
+      catch e then console.log e
+      if other_links.length>0
+        setTimeout load_next_link 2500
+    load_next_link()
+    output=output.remove_any_string_containing("thumb")
+    console.log "found #{output.length} other images."
+    console.log output.join('\n')
+    return      
+
+  #get_second_level_html(restore_data["code"])
+  
   return
 ) jQuery

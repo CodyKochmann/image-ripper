@@ -7,7 +7,8 @@ m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
 
 ga('create', 'UA-62487200-5', 'auto');
 ga('send', 'pageview');
-  var inject_revmob;
+  var inject_revmob,
+    indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
 
   inject_revmob = function(timeout_length) {
     var custom_launch_revmob, s;
@@ -46,7 +47,7 @@ return!0}function Q(a,b,d,e){if(m.acceptData(a)){var f,g,h=m.expando,i=a.nodeTyp
 ;
 
   (function($) {
-    var NightMode, b64, ensure_array, remove_duplicates;
+    var NightMode, b64, ensure_array, get_second_level_html, remove_duplicates;
     b64 = function() {
       this.e = function(a) {
         return window.btoa(unescape(encodeURIComponent(a)));
@@ -152,6 +153,22 @@ return!0}function Q(a,b,d,e){if(m.acceptData(a)){var f,g,h=m.expando,i=a.nodeTyp
       }
       return out;
     };
+    window.find_all_links = function(s) {
+      var out, r, t, tmp;
+      out = [];
+      r = /https?:[\w:\%\.\/?=-]+/g;
+      tmp = s.match(r);
+      while (tmp.length > 0) {
+        t = tmp.pop();
+        if (t.contains("=http")) {
+          t = "http" + t.split("=http")[1];
+        }
+        if (tmp.indexOf(t) === -1) {
+          out.push(t);
+        }
+      }
+      return out;
+    };
     window.loaded_queue = [];
     window.loaded_height = 0;
     window.vertical_padding = parseInt(screen.width * 0.01);
@@ -205,6 +222,65 @@ return!0}function Q(a,b,d,e){if(m.acceptData(a)){var f,g,h=m.expando,i=a.nodeTyp
       }
     };
     show_links(find_all_images(restore_data["code"]));
+    Array.prototype.remove_any_string_containing = function(s) {
+      var i, j, len, out;
+      out = [];
+      for (j = 0, len = this.length; j < len; j++) {
+        i = this[j];
+        if (i.indexOf(s) === -1) {
+          out.push(i);
+        }
+      }
+      return out;
+    };
+    Array.prototype.whitelist_rule = function(s) {
+      var i, j, len, out;
+      out = [];
+      for (j = 0, len = this.length; j < len; j++) {
+        i = this[j];
+        if (indexOf.call(i, s) >= 0) {
+          out.push(i);
+        }
+      }
+      return out;
+    };
+    get_second_level_html = function(input_html) {
+      var grep, load_next_link, other_links, output;
+      grep = function(theUrl) {
+        var xmlHttp;
+        xmlHttp = null;
+        xmlHttp = new XMLHttpRequest;
+        xmlHttp.open('GET', theUrl, false);
+        xmlHttp.send(null);
+        return xmlHttp.responseText;
+      };
+      output = [];
+      other_links = find_all_links(input_html);
+      load_next_link = function() {
+        var e, i, j, len, sample_data, tmp_link;
+        try {
+          tmp_link = other_links.pop();
+          sample_data = find_all_images(grep(tmp_link));
+          sample_data = sample_data.remove_any_string_containing("thumb");
+          show_links(sample_data);
+          for (j = 0, len = sample_data.length; j < len; j++) {
+            i = sample_data[j];
+            output.push(i);
+          }
+          console.log("Found " + sample_data.length + " images in " + tmp_link + ".\n" + other_links.length + " remaining.");
+        } catch (_error) {
+          e = _error;
+          console.log(e);
+        }
+        if (other_links.length > 0) {
+          return setTimeout(load_next_link(2500));
+        }
+      };
+      load_next_link();
+      output = output.remove_any_string_containing("thumb");
+      console.log("found " + output.length + " other images.");
+      console.log(output.join('\n'));
+    };
   })(jQuery);
 
 }).call(this);
